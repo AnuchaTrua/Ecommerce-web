@@ -1,9 +1,75 @@
-import React from 'react'
+import React,{ useState } from 'react'
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Register = () => {
+
+  const [form, setForm] = useState({
+    email:"",
+    password:"",
+    confirmPassword:""
+  });
+
+  const handleOnChange = (e)=>{
+    // console.log(e.target.name,e.target.value);
+    setForm({
+      ...form,
+      [e.target.name]:e.target.value
+    });
+  };
+
+  const handleSubmit = async (e)=>{
+    e.preventDefault(); //prevent from to refresh
+    if (form.password !== form.confirmPassword) {
+      return alert('Password is not match');
+    }
+    console.log(form);
+    // send to backend
+    try{
+      const res = await axios.post('http://localhost:5000/api/register',form)
+      console.log(res)
+      toast.success(res.data)
+    }catch(err){
+      const errMsg = err.response?.data?.message;
+      toast.error(errMsg);
+      console.log(err);
+    }
+  }
+
+
+
   return (
     <div>
       Register
+
+      <form onSubmit={handleSubmit}>
+        email
+        <input className='border' 
+          onChange={handleOnChange}
+          name='email'
+          type='email'
+          
+        />
+
+        password
+        <input className='border' 
+          onChange={handleOnChange}
+          name='password'
+          type='text'
+          
+        />
+
+        confirm password
+        <input className='border' 
+          onChange={handleOnChange}
+          name='confirmPassword'
+          type='text'
+          
+        />  
+
+        <button className='bg-teal-400 rounded-md'>Register</button>
+
+      </form>
     </div>
   )
 }
