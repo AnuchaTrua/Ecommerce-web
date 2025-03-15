@@ -1,0 +1,6 @@
+server
+
+node server
+
+client
+npm run dev
